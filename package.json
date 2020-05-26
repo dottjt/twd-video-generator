@@ -4,16 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "tsc",
+    "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "prod": "ts-node ./src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fluent-ffmpeg": "^2.1.2",
+    "@types/fluent-ffmpeg": "^2.1.14",
+    "@types/fs-extra": "^8.1.0",
+    "fluent-ffmpeg": "^2.1.2", 
     "fs-extra": "^9.0.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.3"
   }
 }
