@@ -45,6 +45,21 @@ text='Stack Overflow': fontcolor=white: fontsize=24: box=1: boxcolor=black@0.5: 
 boxborderw=5: x=(w-text_w)/2: y=(h-text_h)/2" -codec:a copy output.mp4
 https://stackoverflow.com/questions/17623676/text-on-video-ffmpeg
 
+.videoFilters({
+  filter: 'drawtext',
+  options: {
+    fontfile:'/vagrant/fonts/LucidaGrande.ttc',
+    text: 'THIS IS TEXT',
+    fontsize: 20,
+    fontcolor: 'white',
+    x: '(main_w/2-text_w/2)',
+    y: 50,
+    shadowcolor: 'black',
+    shadowx: 2,
+    shadowy: 2
+  }
+})
+
 ## speech to text
 https://www.npmjs.com/package/pocketsphinx
 https://github.com/cmusphinx/pocketsphinx
