@@ -1,8 +1,13 @@
+import * as hero from 'hero-patterns';
 import ffmpeg from 'fluent-ffmpeg';
+import fse from 'fs-extra';
 import path from 'path';
-// import svg2img from 'svg2img';
+import atob from 'atob';
+import * as svgToImg from "svg-to-img";
 
-import { episodeList } from '/Users/julius.reade/Code/PER/thewritersdaily/util/data/episodes.ts';
+import { heroPatternsPropertyList } from './heroPatternsConfig';
+import colors from './colors';
+import { episodeList } from '/Users/julius.reade/Code/PER/thewritersdaily/util/data/episodes';
 
 import {
   AUDIO_FOLDER,
@@ -28,41 +33,70 @@ const getBackgroundImage = (): string => {
   return backgroundImage;
 };
 
-const getSVGBackground = () => {
-// svg2img(
-  // svgString,
-  // { width: 1280, height: 720, preserveAspectRatio:true},
-  // function(error, buffer) {
-//   //returns a Buffer
-//   fs.writeFileSync('foo1.png', buffer);
-// });
-};
+// const getSVGBackground = (svgString) => {
+// };
 
-const generateTemplate = ({
+const randomItemNumber = (stringArray: string[]): string => {
+  return  stringArray[Math.floor(Math.random() * stringArray.length)];
+}
+
+const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min)
+const roundTo = (increment: number, number: number) => Math.round(number / increment) * increment
+const genAlpha = () => roundTo(5, random(23, 102)) / 100;
+
+const generateSVGBackground = (name: string) => {
+  // generate random color combination and opacity value
+  let [c1, c2] = colors[random(1, colors.length) - 1];
+  if (random(1, 2) === 1) [c1, c2] = [c2, c1];
+  const alpha = genAlpha();
+
+  return {
+    fn: name,
+    params: alpha === 1 ? [c2] : [c2, alpha]
+  }
+}
+
+const generateTemplate = async ({
   relevantFileName,
   audioFile
-}: Template): void => {
+}: Template): Promise<void> => {
   const backgroundImage = getBackgroundImage();
   const episodeNumber = relevantFileName.split('-')[1];
 
   const episodeData = episodeList.find((episode: any) => episode.episode_number === Number(episodeNumber));
   const episodeTitle = episodeData.title;
-  // ffmpeg -y -i ./final-audio/ep-1-final.mp3 -loop 1 -i ./twd_video_generator/background-image/index.jpg -i ./twd_video_generator/assets/logo_400.png  \
-  // -filter_complex "[0:a]showwaves=s=1280x720:mode=cline,colorkey=0x000000:0.01:0.1,format=yuva420p[v]; \
-  // [1:v][v]overlay[outFirst]; \
-  // [outFirst][2:v]overlay=(W-w)/2:(H-h)/2[outSecond]; \
-  // [outSecond]drawtext=fontfile=/path/to/font.ttf:text='#1 - The Beginning':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=h-80[outv]" \
-  // -map "[outv]" -pix_fmt yuv420p -map 0:a -shortest -t 5 ./final-video/ep-1-final.mp4
+
+  const { fn, params } = generateSVGBackground(randomItemNumber(heroPatternsPropertyList));
+
+  const heroFn = hero[fn];
+  const svgURI = heroFn.apply(null, params);
+
+  const svgString = svgURI.replace(/data:image\/svg\+xml;base64,/, '');
+  // console.log(svgString);
+  console.log(svgString)
+
+  const image = await svgToImg.from(svgString).toPng({
+    path: "../example.png"
+  });
+
+
+  // svg2img(
+  //   svgString,
+  //   { width: 1280, height: 720, preserveAspectRatio:true},
+  //   function(error: any, buffer: any) {
+  //   //returns a Buffer
+  //   fse.writeFileSync('foo1.png', buffer);
+  // });
+
 
   ffmpeg(`${AUDIO_FOLDER}/${audioFile}`) // original audio file
     .input(backgroundImage)
     .input('./assets/logo_400.png')
-    // .loop(1)
     .complexFilter([
-      '[0:a]showwaves=s=1280x720:mode=cline,colorkey=0x000000:0.01:0.1,format=yuva420p[v]',
+      '[0:a]showwaves=s=1280x720:mode=cline,colorkey=0x000000:0.01:0.1[v]',
       '[1:v][v]overlay[outFirst]',
       '[outFirst][2:v]overlay=(W-w)/2:(H-h)/2[outSecond]',
-      `[outSecond]drawtext=fontfile=${AVENIR_FONT}:text='#1 - The Beginning':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=h-80[outv]`,
+      `[outSecond]drawtext=fontfile=${AVENIR_FONT}:text='${episodeTitle}':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=h-80,fade=in:0:25[outv]`,
     ], 'outv')
     .addInputOption('-framerate 25')
     .outputOptions(['-pix_fmt yuv420p', '-map 0:a', '-shortest', '-t 5'])
@@ -71,7 +105,7 @@ const generateTemplate = ({
       console.log(commandLine);
     })
     .on('end', function(commandLine) {
-      console.log('finished');
+      console.log(`finished creating ${relevantFileName}.${VIDEO_FILE_FORMAT}`);
     })
     .on('error', function(err) {
       console.log('an error happened: ' + err.message);
