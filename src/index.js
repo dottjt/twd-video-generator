@@ -2,15 +2,31 @@ const fse = require('fs-extra');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 
-// __dirname is relative to the file it's being called from i.e. this file.
+const AUDIO_FOLDER = 'final-audio';
+const VIDEO_FOLDER = 'final-video';
+const VIDEO_FILE_FORMAT = 'mp4';
 
-const main = () => {
-  const audioFolder  = path.join(__dirname, '..', 'final-mp3-audio');
+// __dirname is relative to the file it's being called from i.e. this file
 
+const main = async () => {
+  const audioFolder = path.join(__dirname, '..', '..', AUDIO_FOLDER);
+  const videoFolder = path.join(__dirname, '..', '..', VIDEO_FOLDER)
 
-  const command = ffmpeg();
+  const audioFolderFiles = await fse.readdir(audioFolder);
+  const videoFolderFiles = await fse.readdir(videoFolder);
 
-  command
+  for (const audioFile of audioFolderFiles) {
+    const relevantFileName = audioFile.split('.')[0];
+    const videoExists = videoFolderFiles.includes(`${relevantFileName}.${VIDEO_FILE_FORMAT}`);
+
+    if (!videoExists) {
+      console.log(audioFile);
+      const command = ffmpeg();
+      
+
+    }
+  };
+
 };
 
 main();
