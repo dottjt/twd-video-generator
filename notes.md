@@ -1,12 +1,28 @@
 
-<!-- Finally, a work ing version of what I wanted. I now just need to design something not terrible in Photoshop to make this palettable.  -->
-
-ffmpeg -y -i ./final-audio/ep-1-final.mp3 -loop 1 -i ./twd_video_generator/background-image/index.jpg \
+<!-- WORKING! -->
+<!--
+ffmpeg -y -i ./final-audio/ep-1-final.mp3 -loop 1 -i ./twd_video_generator/background-image/index.jpg\
 -filter_complex "[0:a]showwaves=s=1280x720:mode=cline,colorkey=0x000000:0.01:0.1,format=yuva420p[v]; \
 [1:v][v]vstack[outFirst]; \
 [outFirst]drawtext=fontfile=/path/to/font.ttf:text='Stack Overflow':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2[outv]" \
 -map "[outv]" -pix_fmt yuv420p -map 0:a -shortest -t 5 ./final-video/ep-1-final.mp4
+ -->
 
+<!-- LOOKING AT -->
+
+ffmpeg -y -i ./final-audio/ep-1-final.mp3 -loop 1 -i ./twd_video_generator/background-image/index.jpg -i ./twd_video_generator/assets/logo_400.png  \
+-filter_complex "[0:a]showwaves=s=1280x720:mode=cline,colorkey=0x000000:0.01:0.1,format=yuva420p[v]; \
+[1:v][v]overlay[outFirst]; \
+[outFirst][2:v]overlay=(W-w)/2:(H-h)/2[outSecond]; \
+[outSecond]drawtext=fontfile=/path/to/font.ttf:text='#1 - The Beginning':fontcolor=white:fontsize=24:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=h-80[outv]" \
+-map "[outv]" -pix_fmt yuv420p -map 0:a -shortest -t 5 ./final-video/ep-1-final.mp4
+
+<!-- :x=(w-text_w)/2:y=(h-text_h) --> in the drawtext
+
+ffmpeg -i input.mp4 -i image.png \
+-filter_complex "[0:v][1:v] overlay=25:25:enable='between(t,0,20)'" \
+-pix_fmt yuv420p -c:a copy \
+output.mp4
 
 
  <!-- -map 0:a -c:v libx264 -preset fast -crf 18 -c:a libopus -->
