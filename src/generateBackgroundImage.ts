@@ -1,8 +1,11 @@
-import fse from 'fs-extra';
 import path from 'path';
+import GeoPattern from 'geopattern';
+import randomColor from 'randomcolor';
 import atob from 'atob';
 import * as svgToImg from "svg-to-img";
 import * as hero from 'hero-patterns';
+import trianglify from 'trianglify';
+import fs from 'fs';
 
 import { heroPatternsPropertyList } from './heroPatternsConfig';
 import colors from './colors';
@@ -27,20 +30,59 @@ const generateHeroPatternSVG = (name: string) => {
   }
 }
 
-export const generateRandomSVGBackgroundImage = async () => {
+const generateRandomString = (length: number): string => {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+// NOTE: This is awful and does not work like I want.
+// The problem is also finding colour palettes that look nicee.
+// nice-color-palettes // https://www.npmjs.com/package/nice-color-palettes
+// https://www.npmjs.com/package/svg-patterns (Maybe I should nest the svg inside another svg like in this library...)
+const generateHeroPatternSVGString = () => {
   const { fn, params } = generateHeroPatternSVG(randomItemNumber(heroPatternsPropertyList));
 
   const heroFn = hero[fn];
   const svgURI = heroFn.apply(null, params);
+  return svgURI.replace("url('data:image/svg+xml,", "").replace("')", "")
+}
 
-  const svgString = svgURI.replace(/data:image\/svg\+xml;base64,/, '');
+// NOTE: Can't get it to look nice.
+// https://github.com/jasonlong/geo_pattern
+const generateGeoPatternSVGString = () => {
+  const pattern = GeoPattern.generate(generateRandomString(7), { });
+  const svgURI = pattern.toDataUrl();
+  return svgURI.replace('url("data:image/svg+xml;base64,', "").replace('")', "");
+}
+
+const generateTrianglifySVGString = () => {
+  const canvas = trianglify({
+    width: 1280,
+    height: 720
+  }).toCanvas()
+
+  const file = fs.createWriteStream('./background-image/index.png');
+  canvas.createPNGStream().pipe(file);
+}
+
+export const generateRandomSVGBackgroundImage = async () => {
+  // const svgString = generateHeroPatternSVGString();
+  // const svgString = generateGeoPatternSVGString();
+
   // console.log(svgString);
-  console.log(svgString)
+  // const image = await svgToImg.from(atob(svgString)).toPng({
+  //   path: "./example.png",
+  //   width: 1280,
+  //   height: 720,
+  //   background: randomColor({ luminosity: 'light', hue: 'random' })
+  // });
 
-  const image = await svgToImg.from(svgString).toPng({
-    path: "../example.png"
-  });
-
+  generateTrianglifySVGString();
 
   // svg2img(
   //   svgString,
@@ -50,11 +92,17 @@ export const generateRandomSVGBackgroundImage = async () => {
   //   fse.writeFileSync('foo1.png', buffer);
   // });
 
-
+  // NOTE: svg-to-png converts files, not strings
+  // https://www.npmjs.com/package/svg-to-png
+  // var svg_to_png = require('svg-to-png');
+  // svg_to_png.convert(svgString, '../output.png', {
+  // }) // async, returns promise
+  // .then( function(){
+  //     // Do tons of stuff
+  // });
 }
 
 export const generateBackgroundImage = (): string => {
   const backgroundImage = path.join(__dirname, '..', 'background-image', 'index.jpg');
   return backgroundImage;
 };
-

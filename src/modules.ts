@@ -9,3 +9,5 @@ declare module 'r-json';
 declare module 'lien';
 declare module 'bug-killer';
 declare module 'opn';
+
+declare module 'trianglify';
