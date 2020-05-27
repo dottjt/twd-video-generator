@@ -1,6 +1,10 @@
 import ffmpeg from 'fluent-ffmpeg';
 
+import { EpisodeData } from "./symbolic/types/data";
 import { episodeList } from './symbolic/data/episodes';
+import { getEpisodeData } from './getEpisodeData';
+
+import { generateRandomSVGBackgroundImage } from './generateBackgroundImage';
 
 import {
   AUDIO_FOLDER,
@@ -16,28 +20,15 @@ type Template = {
   audioFile: string
 }
 
-import {
-  // generateBackgroundImage,
-  generateRandomSVGBackgroundImage
-} from './generateBackgroundImage';
-
-// import { EpisodeData } from './symbolic/types/data';
-
-const getEpisodeData = (episodeNumber: string): any => {
-  const episodeData = episodeList.find((episode: any) => episode.episode_number === Number(episodeNumber));
-  const episodeTitle = episodeData?.title;
-  return {
-    episodeTitle,
-  }
-}
 
 export const generateVideo = async ({
   relevantFileName,
   audioFile
 }: Template): Promise<void> => {
-  // const backgroundImage = generateBackgroundImage();
   const episodeNumber = relevantFileName.split('-')[1];
-  const { episodeTitle } = getEpisodeData(episodeNumber);
+  const episodeData = episodeList.find((episode: EpisodeData) => episode.episode_number === Number(episodeNumber));
+
+  const { episodeTitle } = getEpisodeData(episodeData as EpisodeData);
 
   await generateRandomSVGBackgroundImage();
 
