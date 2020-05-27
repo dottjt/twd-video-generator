@@ -1,13 +1,6 @@
-import * as hero from 'hero-patterns';
 import ffmpeg from 'fluent-ffmpeg';
-import fse from 'fs-extra';
-import path from 'path';
-import atob from 'atob';
-import * as svgToImg from "svg-to-img";
 
-import { heroPatternsPropertyList } from './heroPatternsConfig';
-import colors from './colors';
-import { episodeList } from '/Users/julius.reade/Code/PER/thewritersdaily/util/data/episodes';
+import { episodeList } from './symbolic/data/episodes';
 
 import {
   AUDIO_FOLDER,
@@ -19,40 +12,23 @@ import {
   AVENIR_FONT,
 } from './constants';
 
-import {
-  drawTextObject
-} from './drawText';
-
 type Template = {
   relevantFileName: string,
   audioFile: string
 }
 
-const getBackgroundImage = (): string => {
-  const backgroundImage = path.join(__dirname, '..', 'background-image', 'index.jpg');
-  return backgroundImage;
-};
+import {
+  generateBackgroundImage,
+  // generateRandomSVGBackgroundImage
+} from './generateBackgroundImage';
 
-// const getSVGBackground = (svgString) => {
-// };
+import { EpisodeData } from './symbolic/types/data';
 
-const randomItemNumber = (stringArray: string[]): string => {
-  return  stringArray[Math.floor(Math.random() * stringArray.length)];
-}
-
-const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min)
-const roundTo = (increment: number, number: number) => Math.round(number / increment) * increment
-const genAlpha = () => roundTo(5, random(23, 102)) / 100;
-
-const generateSVGBackground = (name: string) => {
-  // generate random color combination and opacity value
-  let [c1, c2] = colors[random(1, colors.length) - 1];
-  if (random(1, 2) === 1) [c1, c2] = [c2, c1];
-  const alpha = genAlpha();
-
+const getEpisodeData = (episodeNumber: string): any => {
+  const episodeData = episodeList.find((episode: any) => episode.episode_number === Number(episodeNumber));
+  const episodeTitle = episodeData?.title;
   return {
-    fn: name,
-    params: alpha === 1 ? [c2] : [c2, alpha]
+    episodeTitle,
   }
 }
 
@@ -60,34 +36,11 @@ const generateTemplate = async ({
   relevantFileName,
   audioFile
 }: Template): Promise<void> => {
-  const backgroundImage = getBackgroundImage();
+  const backgroundImage = generateBackgroundImage();
   const episodeNumber = relevantFileName.split('-')[1];
+  const { episodeTitle } = getEpisodeData(episodeNumber);
 
-  const episodeData = episodeList.find((episode: any) => episode.episode_number === Number(episodeNumber));
-  const episodeTitle = episodeData.title;
-
-  const { fn, params } = generateSVGBackground(randomItemNumber(heroPatternsPropertyList));
-
-  const heroFn = hero[fn];
-  const svgURI = heroFn.apply(null, params);
-
-  const svgString = svgURI.replace(/data:image\/svg\+xml;base64,/, '');
-  // console.log(svgString);
-  console.log(svgString)
-
-  const image = await svgToImg.from(svgString).toPng({
-    path: "../example.png"
-  });
-
-
-  // svg2img(
-  //   svgString,
-  //   { width: 1280, height: 720, preserveAspectRatio:true},
-  //   function(error: any, buffer: any) {
-  //   //returns a Buffer
-  //   fse.writeFileSync('foo1.png', buffer);
-  // });
-
+  // generateRandomSVGBackgroundImage();
 
   ffmpeg(`${AUDIO_FOLDER}/${audioFile}`) // original audio file
     .input(backgroundImage)
@@ -116,11 +69,3 @@ const generateTemplate = async ({
 export const runTemplate = (template: Template): void => {
   generateTemplate(template);
 }
-
-
-
-// '[0:a]showfreqs=mode=line:ascale=log:fscale=log:s=1280x518[sf]',
-// '[0:a]showwaves=s=1280x202:mode=p2p[sw]',
-// '[sf][sw]vstack[fg]',
-// '[1:v]scale=1280:-1,crop=iw:720[bg]',
-// `[bg][fg]overlay=shortest=1:format=auto,format=yuv420p,drawtext=fontfile=${AVENIR_FONT}:fontcolor=white:x=10:y=10:text='Some text'[out]`

@@ -142,8 +142,20 @@ ffmpeg -r 25 -i /Users/julius.reade/Google Drive/thewritersdailypodcast/final-au
 
 
 ## speech to text
-https://www.npmjs.com/package/pocketsphinx
+https://www.npmjsw.com/package/pocketsphinx
 https://github.com/cmusphinx/pocketsphinx
 https://askubuntu.com/questions/161515/speech-recognition-app-to-convert-mp3-to-text
 https://askubuntu.com/questions/837408/convert-speech-mp3-audio-files-to-text
 Aegisub
+
+
+
+
+
+
+
+// '[0:a]showfreqs=mode=line:ascale=log:fscale=log:s=1280x518[sf]',
+// '[0:a]showwaves=s=1280x202:mode=p2p[sw]',
+// '[sf][sw]vstack[fg]',
+// '[1:v]scale=1280:-1,crop=iw:720[bg]',
+// `[bg][fg]overlay=shortest=1:format=auto,format=yuv420p,drawtext=fontfile=${AVENIR_FONT}:fontcolor=white:x=10:y=10:text='Some text'[out]`

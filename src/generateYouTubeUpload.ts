@@ -66,13 +66,13 @@ const uploadYouTubeVideo = () => {
       body: fs.createReadStream('video.mp4')
     }
   }, (err: any, data: any) => {
-    console.log('Done.');
-
+    console.log('Done. Video Uploaded.');
     process.exit();
   });
+
+  // setInterval(function () {
+  //   Logger.log(`${prettyBytes(req.req.connection._bytesDispatched)} bytes uploaded.`);
+  // }, 250);
 }
 
 
-setInterval(function () {
-  Logger.log(`${prettyBytes(req.req.connection._bytesDispatched)} bytes uploaded.`);
-}, 250);

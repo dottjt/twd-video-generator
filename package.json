@@ -5,8 +5,15 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
-    "prod": "ts-node ./src/index.ts"
+
+    "ln": "npm run lnData && npm run lnTypes",
+    "lnData": "ln -sfn /Users/julius.reade/Code/PER/thewritersdaily/util/data/* '/Users/julius.reade/Google Drive/thewritersdailypodcast/twd_video_generator/src/symbolic/data'",
+    "lnTypes": "ln -sfn /Users/julius.reade/Code/PER/thewritersdaily/util/types/data.ts '/Users/julius.reade/Google Drive/thewritersdailypodcast/twd_video_generator/src/symbolic/types/data.ts'",
+
+    "dev": "npm run ln && ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "prod": "npm run ln && ts-node ./src/index.ts",
+
+    "upload": "npm run ln && ts-node ./src/generateYouTubeUpload.ts"
   },
   "keywords": [],
   "author": "",

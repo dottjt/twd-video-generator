@@ -1,0 +1,1 @@
+/Users/julius.reade/Code/PER/thewritersdaily/util/types/data.ts
