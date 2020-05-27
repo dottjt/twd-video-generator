@@ -10,7 +10,8 @@
     "lnTypes": "ln -sfn /Users/julius.reade/Code/PER/thewritersdaily/util/types/data.ts '/Users/julius.reade/Google Drive/thewritersdailypodcast/twd_video_generator/src/symbolic/types/data.ts'",
     "dev": "npm run ln && ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "prod": "npm run ln && ts-node ./src/index.ts",
-    "upload": "npm run ln && ts-node ./src/generateYouTubeUpload.ts"
+    "uploadDev": "npm run ln && ts-node-dev --respawn --transpileOnly ./src/uploadYouTube.ts",
+    "upload": "npm run ln && ts-node ./src/uploadYouTube.ts"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "fs-extra": "^9.0.0",
     "geopattern": "^1.2.3",
     "hero-patterns": "^2.1.0",
+    "jsonfile": "^6.0.1",
     "lien": "^3.3.0",
     "nice-color-palettes": "^3.0.0",
     "nodemon": "^2.0.4",

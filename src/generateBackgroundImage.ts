@@ -60,14 +60,21 @@ const generateGeoPatternSVGString = () => {
   return svgURI.replace('url("data:image/svg+xml;base64,', "").replace('")', "");
 }
 
-const generateTrianglifySVGString = () => {
+const generateTrianglifySVGString = (): Promise<void> => {
   const canvas = trianglify({
     width: 1280,
     height: 720
   }).toCanvas()
 
   const file = fs.createWriteStream('./background-image/index.png');
-  canvas.createPNGStream().pipe(file);
+  const pngStream = canvas.createPNGStream();
+
+  pngStream.pipe(file);
+
+  return new Promise(function(resolve, reject) {
+    pngStream.on('end', resolve);
+    pngStream.on('error', reject);
+  });
 }
 
 export const generateRandomSVGBackgroundImage = async () => {
@@ -82,7 +89,7 @@ export const generateRandomSVGBackgroundImage = async () => {
   //   background: randomColor({ luminosity: 'light', hue: 'random' })
   // });
 
-  generateTrianglifySVGString();
+  await generateTrianglifySVGString();
 
   // svg2img(
   //   svgString,

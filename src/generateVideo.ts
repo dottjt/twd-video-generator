@@ -41,6 +41,18 @@ export const generateVideo = async ({
 
   await generateRandomSVGBackgroundImage();
 
+  await ffmpegPromise({
+    audioFile,
+    episodeTitle,
+    relevantFileName,
+  });
+}
+
+const ffmpegPromise = ({
+  audioFile,
+  episodeTitle,
+  relevantFileName,
+}: any) => new Promise((resolve, reject) => {
   ffmpeg(`${AUDIO_FOLDER}/${audioFile}`) // original audio file
     .input('./background-image/index.png') // background image
     .input('./assets/logo_400.png') // podcast logo
@@ -57,10 +69,12 @@ export const generateVideo = async ({
       console.log(commandLine);
     })
     .on('end', function(commandLine) {
+      resolve('Done');
       console.log(`finished creating ${relevantFileName}.${VIDEO_FILE_FORMAT}`);
     })
     .on('error', function(err) {
+      reject('an error happened: ' + err.message);
       console.log('an error happened: ' + err.message);
     })
     .run();
-}
+});

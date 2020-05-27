@@ -22,13 +22,13 @@ const main = async () => {
     const videoExists = videoFolderFiles.includes(`${relevantFileName}.${VIDEO_FILE_FORMAT}`);
 
     if (!videoExists) {
-      generateVideo({
+      await generateVideo({
         relevantFileName,
         audioFile,
       });
     }
   };
-
+  console.log('No more videos to convert!');
 };
 
 main();
