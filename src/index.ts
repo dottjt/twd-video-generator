@@ -11,10 +11,9 @@ const main = async () => {
   const rootFolder = path.join(__dirname, '..');
   const audioFolder = path.join(__dirname, '..', '..', 'final-audio');
   const videoFolder = path.join(__dirname, '..', '..', 'final-video');
-  const videoFont = '/System/Library/Fonts/Avenir.ttc';
-
   const backgroundImageFolder = path.join(__dirname, '..', 'background-image');
   const podcastLogoFile = path.join(__dirname, '..', 'assets', 'logo_400.png');
+  const videoFont = '/System/Library/Fonts/Avenir.ttc';
 
   await generateVideo({
     rootFolder,
@@ -25,14 +24,11 @@ const main = async () => {
     podcastLogoFile,
   });
 
-  await setupYouTubeUpload({
+  setupYouTubeUpload({
     videoFolder,
     credentialsFile,
     fakeYouTubeAPIFile,
   });
-
-  credentialsFile
-fakeYouTubeAPIFile
 };
 
 main();
