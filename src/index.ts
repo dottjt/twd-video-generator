@@ -1,34 +1,39 @@
-import fse from 'fs-extra';
-
-import {
-  AUDIO_FOLDER,
-  VIDEO_FOLDER,
-  VIDEO_FILE_FORMAT,
-} from './constants';
-
+import path from 'path';
 import { generateVideo } from './generateVideo';
+import { setupYouTubeUpload } from './uploadYouTube';
 
 // __dirname is relative to the file it's being called from i.e. this file
-
 const main = async () => {
-  const audioFolderFilesAwait = await fse.readdir(AUDIO_FOLDER);
-  const videoFolderFilesAwait = await fse.readdir(VIDEO_FOLDER);
+  // const TWD_CHANNEL_ID = 'UCHnPAVZax7_QMufnSF8Pc9w';
+  const credentialsFile = path.join(__dirname, '..', 'client_secrets.json');
+  const fakeYouTubeAPIFile = path.join(__dirname, '..', 'fake-youtube-api.txt');
 
-  const audioFolderFiles = audioFolderFilesAwait.filter(item => !item.includes('.DS_Store'));
-  const videoFolderFiles = videoFolderFilesAwait.filter(item => !item.includes('.DS_Store'));
+  const rootFolder = path.join(__dirname, '..');
+  const audioFolder = path.join(__dirname, '..', '..', 'final-audio');
+  const videoFolder = path.join(__dirname, '..', '..', 'final-video');
+  const videoFont = '/System/Library/Fonts/Avenir.ttc';
 
-  for (const audioFile of audioFolderFiles) {
-    const relevantFileName = audioFile.split('.')[0];
-    const videoExists = videoFolderFiles.includes(`${relevantFileName}.${VIDEO_FILE_FORMAT}`);
+  const backgroundImageFolder = path.join(__dirname, '..', 'background-image');
+  const podcastLogoFile = path.join(__dirname, '..', 'assets', 'logo_400.png');
 
-    if (!videoExists) {
-      await generateVideo({
-        relevantFileName,
-        audioFile,
-      });
-    }
-  };
-  console.log('No more videos to convert!');
+  await generateVideo({
+    rootFolder,
+    audioFolder,
+    videoFolder,
+    backgroundImageFolder,
+    videoFont,
+    podcastLogoFile,
+  });
+
+  await setupYouTubeUpload({
+    videoFolder,
+    credentialsFile,
+    fakeYouTubeAPIFile,
+  });
+
+  credentialsFile
+fakeYouTubeAPIFile
 };
 
 main();
+

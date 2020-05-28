@@ -5,18 +5,16 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "ln": "npm run lnData && npm run lnTypes",
-    "lnData": "ln -sfn /Users/julius.reade/Code/PER/thewritersdaily/util/data/* '/Users/julius.reade/Google Drive/thewritersdailypodcast/twd_video_generator/src/symbolic/data'",
-    "lnTypes": "ln -sfn /Users/julius.reade/Code/PER/thewritersdaily/util/types/data.ts '/Users/julius.reade/Google Drive/thewritersdailypodcast/twd_video_generator/src/symbolic/types/data.ts'",
-    "dev": "npm run ln && ts-node-dev --respawn --transpileOnly ./src/index.ts",
-    "prod": "npm run ln && ts-node ./src/index.ts",
-    "uploadDev": "npm run ln && ts-node-dev --respawn --transpileOnly ./src/uploadYouTube.ts",
-    "upload": "npm run ln && ts-node ./src/uploadYouTube.ts"
+    "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "prod": "ts-node ./src/index.ts",
+    "uploadDev": "ts-node-dev --respawn --transpileOnly ./src/uploadYouTube.ts",
+    "upload": "ts-node ./src/uploadYouTube.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dottjt/datareade": "^1.0.20",
     "@types/fluent-ffmpeg": "^2.1.14",
     "@types/fs-extra": "^8.1.0",
     "@types/geopattern": "^1.2.4",

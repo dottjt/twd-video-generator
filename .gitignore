@@ -1,3 +1,4 @@
 node_modules
-src/client_secrets.json
 client_secrets.json
+
+.env

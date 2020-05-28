@@ -24,3 +24,7 @@ There are two scripts here which help me turn my podcast into a video.
 // https://developers.google.com/youtube/v3/docs/videos
 // https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={channel id here}&maxResults=25&key={YOUR_API_KEY}
 // console.log(req);
+
+
+TODO GIFY IMPLEMENT https://www.npmjs.com/package/giphy-js-sdk-core
+Will need to verify it, as well. 
