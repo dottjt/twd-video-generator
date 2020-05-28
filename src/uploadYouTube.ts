@@ -165,7 +165,6 @@ export const setupYouTubeUpload = ({
   });
 }
 
-
 // https://developers.google.com/youtube/v3/guides/implementation/pagination
 // const listYouTubeVideos = () => new Promise((resolve, reject) => {
 //   Youtube.videos.list({
