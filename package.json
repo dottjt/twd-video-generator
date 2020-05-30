@@ -1,45 +1,21 @@
 {
-  "name": "twd_video_geenerator",
+  "name": "twd_video_generator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tsc": "tsc",
-    "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
-    "prod": "ts-node ./src/index.ts",
-    "uploadDev": "ts-node-dev --respawn --transpileOnly ./src/uploadYouTube.ts",
-    "upload": "ts-node ./src/uploadYouTube.ts"
+    "update_datareade": "npm update @dottjt/datareade",
+    "dev": "npm run update_datareade && ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "prod": "npm run update_datareade && ts-node ./src/index.ts",
+    "uploadDev": "npm run update_datareade && ts-node-dev --respawn --transpileOnly ./src/uploadYouTube.ts",
+    "upload": "npm run update_datareade && ts-node ./src/uploadYouTube.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dottjt/datareade": "^1.0.20",
-    "@types/fluent-ffmpeg": "^2.1.14",
-    "@types/fs-extra": "^8.1.0",
-    "@types/geopattern": "^1.2.4",
-    "atob": "^2.1.2",
-    "base64-img": "^1.0.4",
-    "bug-killer": "^4.4.4",
-    "fluent-ffmpeg": "^2.1.2",
-    "fs": "0.0.1-security",
-    "fs-extra": "^9.0.0",
-    "geopattern": "^1.2.3",
-    "hero-patterns": "^2.1.0",
-    "jsonfile": "^6.0.1",
-    "lien": "^3.3.0",
-    "nice-color-palettes": "^3.0.0",
-    "nodemon": "^2.0.4",
-    "opn": "^6.0.0",
-    "pretty-bytes": "^5.3.0",
-    "r-json": "^1.2.9",
-    "random-a11y-combo": "^1.0.0",
-    "randomcolor": "^0.5.4",
-    "svg-to-img": "^2.0.9",
-    "svg-to-png": "^4.0.0",
-    "trianglify": "^4.0.0",
+    "@dottjt/datareade": "^1.0.25",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.8.3",
-    "youtube-api": "^2.0.10"
+    "typescript": "^3.8.3"
   }
 }

@@ -1,8 +1,6 @@
 import path from 'path';
-import { generateVideo } from './generateVideo';
-import { setupYouTubeUpload } from './uploadYouTube';
+import { data, media } from '@dottjt/datareade';
 
-// __dirname is relative to the file it's being called from i.e. this file
 const main = async () => {
   // const TWD_CHANNEL_ID = 'UCHnPAVZax7_QMufnSF8Pc9w';
   const credentialsFile = path.join(__dirname, '..', 'client_secrets.json');
@@ -15,21 +13,25 @@ const main = async () => {
   const podcastLogoFile = path.join(__dirname, '..', 'assets', 'logo_400.png');
   const videoFont = '/System/Library/Fonts/Avenir.ttc';
 
-  await generateVideo({
+  await media.generateVideo({
     rootFolder,
     audioFolder,
     videoFolder,
     backgroundImageFolder,
     videoFont,
     podcastLogoFile,
+    episodes: data.episodesTWD,
   });
 
-  setupYouTubeUpload({
-    videoFolder,
-    credentialsFile,
-    fakeYouTubeAPIFile,
-  });
+  // media.uploadYouTube({
+  //   videoFolder,
+  //   credentialsFile,
+  //   fakeYouTubeAPIFile,
+  // });
 };
 
 main();
+
+
+
 
