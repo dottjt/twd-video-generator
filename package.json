@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dottjt/datareade": "^1.0.25",
+    "@dottjt/datareade": "^1.1.73",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
   }
